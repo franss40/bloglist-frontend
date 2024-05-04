@@ -13,6 +13,7 @@ const App = () => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
+  const [color, setColor] = useState("red")
 
   useEffect(() => {
     const loggedJSON = window.localStorage.getItem("loggedUser")
@@ -36,18 +37,19 @@ const App = () => {
         user.token
       )
       setBlogs(blogs.concat(response))
-      setTitle("")
-      setAuthor("")
-      setUrl("")
+      setErrorMessage("New blog: " + response.title + " by " + response.author)
+      setColor('green')
     } catch (error) {
       setErrorMessage("failure to create blog")
+      setColor("red")
+    } finally {
       setTitle("")
       setAuthor("")
       setUrl("")
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
-    }    
+    }
   }
 
   const handleLogin = async (event) => {
@@ -56,13 +58,14 @@ const App = () => {
       const user = await loginService.login({ username, password })
       setUser(user)
       window.localStorage.setItem("loggedUser", JSON.stringify(user))
-      setUsername('')
-      setPassword('')
-      console.log("logging in with", user)
+      setErrorMessage('logging in with ' + user.username)
+      setColor("green")
     } catch (error) {
       setErrorMessage("Wrong credentials")
-      setUsername('')
-      setPassword('')
+      setColor("red")
+    } finally {
+      setUsername("")
+      setPassword("")
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -147,7 +150,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={errorMessage} />
+      <Notification message={errorMessage} type={color} />
 
       {user === null ? (
         <div>
