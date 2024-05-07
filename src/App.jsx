@@ -4,6 +4,7 @@ import blogService from "./services/blogs"
 import loginService from "./services/login"
 import Notification from "./components/Notification"
 import Togglable from "./components/Togglable"
+import CreateBlog from "./components/CreateBlog"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -11,9 +12,6 @@ const App = () => {
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
-  const [title, setTitle] = useState("")
-  const [author, setAuthor] = useState("")
-  const [url, setUrl] = useState("")
   const [color, setColor] = useState("red")
 
   useEffect(() => {
@@ -30,8 +28,11 @@ const App = () => {
     setUser(null)
   }
 
-  const handleCreate = async (event) => {
+  const handleCreate = async (blog) => {
     event.preventDefault()
+    const title = blog.title
+    const author = blog.author
+    const url = blog.url
     try {
       const response = await blogService.createBlog(
         { title, author, url },
@@ -44,9 +45,6 @@ const App = () => {
       setErrorMessage("failure to create blog")
       setColor("red")
     } finally {
-      setTitle("")
-      setAuthor("")
-      setUrl("")
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -110,44 +108,6 @@ const App = () => {
     </dl>
   )
 
-  const createblogs = () => (
-    <div>
-      <form onSubmit={ handleCreate }>
-        <p>
-          <label htmlFor="title">Title </label>
-          <input
-            type="text"
-            value={ title }
-            id="title"
-            name="title"
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </p>
-        <p>
-          <label htmlFor="author">Author </label>
-          <input
-            type="text"
-            value={ author }
-            name="author"
-            id="author"
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </p>
-        <p>
-          <label htmlFor="url">Url </label>
-          <input
-            type="text"
-            value={ url }
-            name="url"
-            id="url"
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </p>
-        <button type="submit">create</button>
-      </form>
-    </div>
-  )
-
   return (
     <div>
       <Notification message={errorMessage} type={color} />
@@ -163,7 +123,9 @@ const App = () => {
             {user.name} logged-in <button onClick={handleLogout}>logout</button>
           </p>
           <h1>blogs</h1>
-          <Togglable buttonLabel="Create Blog">{createblogs()}</Togglable>
+          <Togglable buttonLabel="Create Blog">
+            <CreateBlog handleCreate={handleCreate} />
+          </Togglable>
           {blogsView()}
         </div>
       )}
