@@ -42,7 +42,26 @@ const App = () => {
     } catch (error) {
       setErrorMessage("failure to create blog")
       setColor("red")
-    } finally {
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
+  const handleLike = async(blog) => {
+    try {
+      const response = await blogService.editBlog(blog)
+      const update = blogs.map(item => {
+        if (item.id == blog.id) {
+          return {...response, likes: response.likes}
+        } else {
+          return item
+        }
+      })
+      setBlogs(update)
+    } catch (error) {
+      setErrorMessage("failure to update likes blog")
+      setColor("red")
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -59,7 +78,6 @@ const App = () => {
     } catch (error) {
       setErrorMessage("Wrong credentials")
       setColor("red")
-    } finally {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -84,7 +102,7 @@ const App = () => {
           <Togglable buttonLabel="Create Blog">
             <CreateBlog handleCreate = { handleCreate } />
           </Togglable>
-          <BlogsView blogs = { blogs } />
+          <BlogsView blogs = { blogs } onLikes = {handleLike} />
         </div>
       )}
     </div>
