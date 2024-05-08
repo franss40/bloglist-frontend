@@ -3,7 +3,9 @@ const baseUrl = '/api/blogs'
 
 const getAll = () => {
   const request = axios.get(baseUrl)
-  return request.then(response => response.data)
+  return request.then(response => {
+    return response.data.sort(function(a,b) {return b.likes - a.likes})
+  })
 }
 
 const createBlog = async (newObject, token) => {
