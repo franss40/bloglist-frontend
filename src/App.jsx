@@ -1,15 +1,14 @@
 import { useState, useEffect } from "react"
-import Blog from "./components/Blog"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
 import Notification from "./components/Notification"
 import Togglable from "./components/Togglable"
 import CreateBlog from "./components/CreateBlog"
+import LoginForm from "./components/LoginForm"
+import BlogsView from "./components/BlogsView"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
   const [color, setColor] = useState("red")
@@ -29,7 +28,6 @@ const App = () => {
   }
 
   const handleCreate = async (blog) => {
-    event.preventDefault()
     const title = blog.title
     const author = blog.author
     const url = blog.url
@@ -51,8 +49,7 @@ const App = () => {
     }
   }
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
+  const handleLogin = async (username , password) => {
     try {
       const user = await loginService.login({ username, password })
       setUser(user)
@@ -63,50 +60,11 @@ const App = () => {
       setErrorMessage("Wrong credentials")
       setColor("red")
     } finally {
-      setUsername("")
-      setPassword("")
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
     }
   }
-
-  const loginForm = () => (
-    <div>
-      <form onSubmit={handleLogin}>
-        <p>
-          <label htmlFor="username">Username </label>
-          <input
-            type="text"
-            value={username}
-            id="username"
-            name="username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </p>
-        <p>
-          <label htmlFor="password">Password </label>
-          <input
-            type="password"
-            value={password}
-            name="password"
-            id="password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </p>
-        <button type="submit">login</button>
-      </form>
-      <hr />
-    </div>
-  )
-
-  const blogsView = () => (
-    <dl>
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
-    </dl>
-  )
 
   return (
     <div>
@@ -115,18 +73,18 @@ const App = () => {
       {user === null ? (
         <div>
           <h1>blogs</h1>
-          {loginForm()}
+          <LoginForm handleLogin = { handleLogin } />
         </div>
       ) : (
         <div>
           <p>
-            {user.name} logged-in <button onClick={handleLogout}>logout</button>
+            {user.name} logged-in <button onClick = { handleLogout }>logout</button>
           </p>
           <h1>blogs</h1>
           <Togglable buttonLabel="Create Blog">
-            <CreateBlog handleCreate={handleCreate} />
+            <CreateBlog handleCreate = { handleCreate } />
           </Togglable>
-          {blogsView()}
+          <BlogsView blogs = { blogs } />
         </div>
       )}
     </div>
