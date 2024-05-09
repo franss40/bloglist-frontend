@@ -36,7 +36,12 @@ const App = () => {
         { title, author, url },
         user.token
       )
-      setBlogs(blogs.concat(response))
+      setBlogs(
+        blogs.concat({
+          ...response,
+          user: { username: user.username, name: user.name, id: response.user },
+        })
+      )
       setErrorMessage("New blog: " + response.title + " by " + response.author)
       setColor('green')
     } catch (error) {
