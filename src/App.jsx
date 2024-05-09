@@ -42,6 +42,7 @@ const App = () => {
     } catch (error) {
       setErrorMessage("failure to create blog")
       setColor("red")
+    } finally {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -50,18 +51,57 @@ const App = () => {
 
   const handleLike = async(blog) => {
     try {
-      const response = await blogService.editBlog(blog)
+      
+      const response = await blogService.editBlog({...blog, user: blog.user.id})
       const update = blogs.map(item => {
         if (item.id == blog.id) {
-          return {...response, likes: response.likes}
+          return {
+            ...response,
+            likes: response.likes,
+            user: {
+              username: user.username,
+              name: user.name,
+              id: blog.user.id,
+            },
+          }
         } else {
-          return item
+          return {
+            ...item,
+            user: { username: user.username, name: user.name, id: blog.user },
+          }
         }
       })
       setBlogs(update)
+      setErrorMessage("added like")
+      setColor("green")
     } catch (error) {
       setErrorMessage("failure to update likes blog")
       setColor("red")
+    } finally {
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
+  const removeBlog = async(id) => {
+    try {
+      const resp = window.confirm('are you sure ?')
+      if (resp) {
+        await blogService.removeBlog(id, user.token)
+        const remove = blogs.filter((blog) => {
+          if (blog.id !== id) {
+            return blog
+          }
+        })
+        setBlogs(remove)
+        setErrorMessage("Remove blog")
+        setColor("green")
+      }
+    } catch (error) {
+      setErrorMessage("failure to remove blog")
+      setColor("red")
+    } finally {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -78,6 +118,7 @@ const App = () => {
     } catch (error) {
       setErrorMessage("Wrong credentials")
       setColor("red")
+    } finally {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -102,7 +143,7 @@ const App = () => {
           <Togglable buttonLabel="Create Blog">
             <CreateBlog handleCreate = { handleCreate } />
           </Togglable>
-          <BlogsView blogs = { blogs } onLikes = {handleLike} />
+          <BlogsView blogs = { blogs } onLikes = {handleLike} onRemove = {removeBlog} user = {user} />
         </div>
       )}
     </div>

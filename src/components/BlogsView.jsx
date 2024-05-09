@@ -1,12 +1,12 @@
 import Blog from './Blog';
 
-const BlogsView = ({ blogs, onLikes }) => {
+const BlogsView = ({ blogs, onLikes, onRemove, user }) => {
   return (
-    <dl>
+    <div>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} onLikes = {onLikes} />
+        <Blog key={blog.id} blog={blog} onLikes = {onLikes} onRemove = {onRemove} user = {user} />
       ))}
-    </dl>
+    </div>
   )
 }
 

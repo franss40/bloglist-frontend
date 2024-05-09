@@ -24,4 +24,13 @@ const editBlog = async (newObject) => {
   return response.data
 }
 
-export default { getAll, createBlog, editBlog }
+const removeBlog = async(id, token) => {
+  const tokenBeaver = `Bearer ${token}`
+  const config = {
+    headers: { Authorization: tokenBeaver },
+  }
+  const response = await axios.delete(baseUrl + '/' + id, config)
+  return response.data
+}
+
+export default { getAll, createBlog, editBlog, removeBlog }
