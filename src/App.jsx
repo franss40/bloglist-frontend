@@ -1,20 +1,20 @@
-import { useState, useEffect } from "react"
-import blogService from "./services/blogs"
-import loginService from "./services/login"
-import Notification from "./components/Notification"
-import Togglable from "./components/Togglable"
-import CreateBlog from "./components/CreateBlog"
-import LoginForm from "./components/LoginForm"
-import BlogsView from "./components/BlogsView"
+import { useState, useEffect } from 'react'
+import blogService from './services/blogs'
+import loginService from './services/login'
+import Notification from './components/Notification'
+import Togglable from './components/Togglable'
+import CreateBlog from './components/CreateBlog'
+import LoginForm from './components/LoginForm'
+import BlogsView from './components/BlogsView'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
-  const [color, setColor] = useState("red")
+  const [color, setColor] = useState('red')
 
   useEffect(() => {
-    const loggedJSON = window.localStorage.getItem("loggedUser")
+    const loggedJSON = window.localStorage.getItem('loggedUser')
     if (loggedJSON) {
       const user = JSON.parse(loggedJSON)
       setUser(user)
@@ -28,25 +28,23 @@ const App = () => {
   }
 
   const handleCreate = async (blog) => {
-    const title = blog.title
-    const author = blog.author
-    const url = blog.url
     try {
       const response = await blogService.createBlog(
-        { title, author, url },
+        blog,
         user.token
       )
+
       setBlogs(
         blogs.concat({
           ...response,
           user: { username: user.username, name: user.name, id: response.user },
         })
       )
-      setErrorMessage("New blog: " + response.title + " by " + response.author)
+      setErrorMessage('New blog: ' + response.title + ' by ' + response.author)
       setColor('green')
     } catch (error) {
-      setErrorMessage("failure to create blog")
-      setColor("red")
+      setErrorMessage('failure to create blog')
+      setColor('red')
     } finally {
       setTimeout(() => {
         setErrorMessage(null)
@@ -56,10 +54,9 @@ const App = () => {
 
   const handleLike = async(blog) => {
     try {
-      
-      const response = await blogService.editBlog({...blog, user: blog.user.id})
+      const response = await blogService.editBlog({ ...blog, user: blog.user.id })
       const update = blogs.map(item => {
-        if (item.id == blog.id) {
+        if (item.id === blog.id) {
           return {
             ...response,
             likes: response.likes,
@@ -77,11 +74,11 @@ const App = () => {
         }
       })
       setBlogs(update)
-      setErrorMessage("added like")
-      setColor("green")
+      setErrorMessage('added like')
+      setColor('green')
     } catch (error) {
-      setErrorMessage("failure to update likes blog")
-      setColor("red")
+      setErrorMessage('failure to update likes blog')
+      setColor('red')
     } finally {
       setTimeout(() => {
         setErrorMessage(null)
@@ -100,12 +97,12 @@ const App = () => {
           }
         })
         setBlogs(remove)
-        setErrorMessage("Remove blog")
-        setColor("green")
+        setErrorMessage('Remove blog')
+        setColor('green')
       }
     } catch (error) {
-      setErrorMessage("failure to remove blog")
-      setColor("red")
+      setErrorMessage('failure to remove blog')
+      setColor('red')
     } finally {
       setTimeout(() => {
         setErrorMessage(null)
@@ -117,12 +114,12 @@ const App = () => {
     try {
       const user = await loginService.login({ username, password })
       setUser(user)
-      window.localStorage.setItem("loggedUser", JSON.stringify(user))
+      window.localStorage.setItem('loggedUser', JSON.stringify(user))
       setErrorMessage('logging in with ' + user.username)
-      setColor("green")
+      setColor('green')
     } catch (error) {
-      setErrorMessage("Wrong credentials")
-      setColor("red")
+      setErrorMessage('Wrong credentials')
+      setColor('red')
     } finally {
       setTimeout(() => {
         setErrorMessage(null)

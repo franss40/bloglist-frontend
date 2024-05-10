@@ -13,7 +13,7 @@ const createBlog = async (newObject, token) => {
   const config = {
     headers: { Authorization: tokenBeaver },
   }
-  
+
   const response = await axios.post(baseUrl, newObject, config)
   return response.data
 }

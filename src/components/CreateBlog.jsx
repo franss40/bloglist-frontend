@@ -1,9 +1,10 @@
-import { useState } from "react"
+import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const CreateBlog = ({ handleCreate }) => {
-  const [title, setTitle] = useState("")
-  const [author, setAuthor] = useState("")
-  const [url, setUrl] = useState("")
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
 
   const createBlog = (event) => {
@@ -55,6 +56,10 @@ const CreateBlog = ({ handleCreate }) => {
       </form>
     </div>
   )
+}
+
+CreateBlog.propTypes = {
+  handleCreate: PropTypes.func.isRequired
 }
 
 export default CreateBlog

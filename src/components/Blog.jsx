@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, onLikes, onRemove, user }) => {
   const [view, setView] = useState(true)
@@ -22,10 +23,10 @@ const Blog = ({ blog, onLikes, onRemove, user }) => {
       <h3>
         {blog.title} <button onClick={handleView}>Hide</button>
       </h3>
-      <div style={{ paddingLeft: "10px" }}>
+      <div style={{ paddingLeft: '10px' }}>
         <p>{blog.url}</p>
         <p>
-          Likes: {blog.likes}{" "}
+          Likes: {blog.likes}{' '}
           <button onClick={() => handleLike(blog)}>Like</button>
         </p>
         <p>
@@ -40,7 +41,7 @@ const Blog = ({ blog, onLikes, onRemove, user }) => {
       </div>
     </>
   )
-  
+
   return (
     <div>
       {viewButton}
@@ -49,5 +50,11 @@ const Blog = ({ blog, onLikes, onRemove, user }) => {
   )
 }
 
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  onLikes: PropTypes.func.isRequired,
+  onRemove: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
+}
 
 export default Blog
