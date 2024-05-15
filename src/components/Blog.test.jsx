@@ -1,31 +1,38 @@
 import { render, screen } from '@testing-library/react'
 import Blog from './Blog'
-import { describe, expect, test } from 'vitest'
+import { beforeEach, describe, expect, test } from 'vitest'
 import userEvent from '@testing-library/user-event'
 
 describe('<Blog />', () => {
-  test('rendering component, it shows the title, but not the author, url or likes. simulate click on visible and hidden button', async () => {
-    const blog = {
-      title: 'title test',
-      author: 'author test',
-      url: 'pruebatest.com',
-      likes: 0,
-      user: {
-        username: 'hellas',
-        name: 'Arto Hellas',
-        id: '66126bc3e2fa47c0eeb9728b',
-      },
-    }
 
-    const onLikes = vi.fn()
-    const onRemove = vi.fn()
-    const onUser = {
+  const blog = {
+    title: 'title test',
+    author: 'author test',
+    url: 'pruebatest.com',
+    likes: 0,
+    user: {
       username: 'hellas',
       name: 'Arto Hellas',
       id: '66126bc3e2fa47c0eeb9728b',
-    }
+    },
+  }
 
-    const { container } = render(
+  const onUser = {
+    username: 'hellas',
+    name: 'Arto Hellas',
+    id: '66126bc3e2fa47c0eeb9728b',
+  } 
+
+  let onLikes
+  let onRemove
+
+  beforeEach(() => {
+    onLikes = vi.fn()
+    onRemove = vi.fn()
+  })
+
+  test('rendering component, it shows the title, but not the author, url or likes. simulate click on visible and hidden button', async () => {
+    render(
       <Blog blog={blog} onLikes={onLikes} onRemove={onRemove} user={onUser} />
     )
     const user = userEvent.setup()
@@ -50,5 +57,21 @@ describe('<Blog />', () => {
     expect(screen.queryByText(/author test/)).not.toBeInTheDocument()
     expect(screen.queryByText(/pruebatest.com/)).not.toBeInTheDocument()
     expect(screen.queryByText(/Likes: 0/)).not.toBeInTheDocument()
+  })
+
+  test('double click on likes button, calls twice the event handler received by props', async() => {
+    render(
+      <Blog blog={blog} onLikes={onLikes} onRemove={onRemove} user={onUser} />
+    )
+    const user = userEvent.setup()
+    const visibleButton = screen.getByText(/View/)
+    await user.click(visibleButton)
+
+    const likeButton = screen.getByText('Like')
+
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+    expect(onLikes.mock.calls).toHaveLength(2)
   })
 })
