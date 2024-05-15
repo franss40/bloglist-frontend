@@ -21,7 +21,8 @@ const Blog = ({ blog, onLikes, onRemove, user }) => {
   ) : (
     <>
       <h3>
-        {blog.title} <button onClick={handleView}>Hide</button>
+        {blog.title}
+        <button onClick={handleView}>Hide</button>
       </h3>
       <div style={{ paddingLeft: '10px' }}>
         <p>{blog.url}</p>
