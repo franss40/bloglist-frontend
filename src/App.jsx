@@ -69,7 +69,7 @@ const App = () => {
         } else {
           return {
             ...item,
-            user: { username: user.username, name: user.name, id: blog.user },
+            user: { username: user.username, name: user.name, id: blog.user.id },
           }
         }
       })
@@ -127,6 +127,7 @@ const App = () => {
     }
   }
 
+  const sortedBlogs = blogs.sort((a,b) => b.likes - a.likes)
   return (
     <div>
       <Notification message={errorMessage} type={color} />
@@ -145,7 +146,7 @@ const App = () => {
           <Togglable buttonLabel="Create Blog">
             <CreateBlog handleCreate = { handleCreate } />
           </Togglable>
-          <BlogsView blogs = { blogs } onLikes = {handleLike} onRemove = {removeBlog} user = {user} />
+          <BlogsView blogs = { sortedBlogs } onLikes = {handleLike} onRemove = {removeBlog} user = {user} />
         </div>
       )}
     </div>

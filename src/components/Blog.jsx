@@ -24,11 +24,13 @@ const Blog = ({ blog, onLikes, onRemove, user }) => {
         {blog.title}
         <button onClick={handleView}>Hide</button>
       </h3>
-      <div style={{ paddingLeft: '10px' }}>
+      <div style={{ paddingLeft: "10px" }} data-testid={blog.title}>
         <p>{blog.url}</p>
         <p>
-          Likes: {blog.likes}{' '}
-          <button onClick={() => handleLike(blog)}>Like</button>
+          Likes: <span data-testid="numberLikes">{blog.likes}</span>{" "}
+          <button data-testid="buttonLike" onClick={() => handleLike(blog)}>
+            Like
+          </button>
         </p>
         <p>
           Written by <strong>{blog.author}</strong>

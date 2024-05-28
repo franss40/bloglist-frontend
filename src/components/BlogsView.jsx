@@ -5,7 +5,13 @@ const BlogsView = ({ blogs, onLikes, onRemove, user }) => {
   return (
     <div>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} onLikes = {onLikes} onRemove = {onRemove} user = {user} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          onLikes={onLikes}
+          onRemove={onRemove}
+          user={user}
+        />
       ))}
     </div>
   )
